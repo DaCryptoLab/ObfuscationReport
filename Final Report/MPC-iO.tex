@@ -7,13 +7,25 @@ where a single server coordinates the computation and parties "log in" at differ
 The optimal round complexity for MPC in the plain model is known to be 5 rounds \cite{katz2004round}. The work in \cite{MPC-iO} achieves the best bound for MPC in the CRS model as one round protocols are not possible in general.
 
 % General overview on the protocol
+The main result of \cite{MPC-iO} is a compiler transforming any MPC protocol into a 2-round protocol in the CRS model: % XXX: "The authors use [...]"
+\begin{myinformaltheorem}
+	Assuming indistinguishability obfuscation CCA-secure public-key encryption and statistically-sound noninteractive zero-knowledge, any multiparty function can be computed securely in just two rounds of broadcast.
+\end{myinformaltheorem}
+
+
+% What's the threshold here?
+The resulting protocol resists static malicious corruptions in the UC setting \cite{canetti2001universally}.
+Although the authors of \cite{MPC-iO} claimed otherwise, \cite{gordon2015constant} recently pointed out that no 2-round protocol can achieve fairness (even in the CRS model).
+
+
+
 
 
 % One of the results that stem from iO+OWF
 
 
 \begin{comment}
-What to say:
+What to say: (see notepad)
 - 
 \end{comment}
 
@@ -23,6 +35,22 @@ What to say:
 
 
 \subsection{Protocol}
+In the next paragraphs we will give an informal view of the compiler.
+We assume the existence of a $t$-round MPC protocol $\pi$. % XXX: Other assumptions on \pi?
+% We cannot do one round
+Let us first observe  that there is no way we can transform $\pi$ in a single-round protocol. Assume a protocol consisted only of one broadcast message $m_i$ from each player $P_i$. Since that message is a function only of $P_i$'s private input and randomness, malicious players may be able to use it to compute function outputs on arbitrary private inputs of their own. Thus a 2-round protocol is the best we can hope for.
+
+% Rough explanations of two rounds
+One natural way to conceive the two rounds is to have the players commit to their private inputs and randomness in the first round.
+In the second round we want to "compress" the original $t$ rounds of $\pi$ letting each player $P_i$ broadcast $t$ obfuscated programs
+$\iO(f^i_1),...,\iO(f^i_t)$. Intuitively, the $j$-th obfuscated program computes the message at round $j$ for $P_i$ in the original protocol $\pi$.
+
+% Problem with current layout: reset attacks
+
+% How to solve the reset attacks problem
+
+% Summing up and having a closer look
+
 
 \subsubsection{Model and Tools: NIZK, CRS model, CCA-security}
 
