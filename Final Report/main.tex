@@ -18,33 +18,10 @@
 
 \end{abstract}
 
-\section{Introduction}
-% General intro on obfuscation
-The goal of obfuscation is to make a program unintelligible preserving its functionality.
-Cryptographers first conceived obfuscation as \emph{Virtual Black Box obfuscation} (VBB) where
-no polynomial adversary can gain more information from using the obfuscated program than from having
-oracle access to the function it computes. In 2001 \cite{VBB-imp} showed that it is impossible to have a general construction of obfuscators for Turing Machines. These negative results extend to the obfuscation of circuits as well as to some weaker definitions (e.g. approximate obfuscation) and applications (e.g. software watermarking).
-
-After this result, cryptographers focused on other meaningful, yet weaker, definitions of
-obfuscation. Currently the most promising variant of obfuscation is that of \emph{indistinguishability Obfuscation} ($\iO$), suggested in \cite{VBB-imp}. In $\iO$, no PPT can distinguish between two functionally equivalent obfuscated programs. Recently, \cite{garg2013candidate} proposed an efficient construction of $\iO$ for all circuits basing its security on assumptions related to multilinear maps \cite{garg2013candidatemulti}.
-
-Clearly $\iO$ is a weaker primitive than VBB obfuscation. We have little hope of proving that $\iO$ implies one-way functions: if $P = NP$ one-way functions would not exist but we would still have $\iO$ (\cite{VBB-imp} describes a general but inefficient construction of $\iO$). 
-% In the next paragraph I say that iO is weak but we can still build interesting things by using it combining it with other assumptions
-Thus it is unlikely we will be able to construct "interesting" cryptographic primitives from
-$\iO$ alone (one exception is witness encryption \cite{}) % TODO: Missing citation.
-We can however combine $\iO$ with one-way functions (OWFs) to construct several other primitives \cite{}, such as functional encryption, public-key encryption, NIZK, CCA encryption and deniable encryption. % TODO: Provide citations like the ones in the MPC paper on this
-
-% XXX: Say more about the results we are going to talk about above here?
-
-In this report we discuss some of the current state of knowledge about what obfuscation can and cannot do.
-We first discuss some of the impossibility results on VBB obfuscation (Section \ref{sec:VBB-imp}). % TODO: Have sections properly labeled
-We then describe some constructions obtained by combining $\iO$ and OWFs. In Section \ref{sec:iO-mpc} we present a two-round MPC protocol in the Common Reference String (CRS) model due to \cite{iO-mpc}. The next work (Section \ref{sec:iO-deniable}) is a construction of deniable encryption \cite{iO-deniable}. Finally, in Section \ref{sec:iO-FE} we describe how we can construct functional encryption \cite{} % XXX: Citation on functional encryption
-from $\iO$ and OWFs \cite{iO-FE}.
+\include{introduction}
 
 
-
-
-\include{preliminaries}
+%\include{preliminaries}
 
 \include{VBB-impossibility}
 

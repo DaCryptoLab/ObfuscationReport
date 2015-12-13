@@ -13,7 +13,7 @@ In this section:
 	\begin{itemize}
 		\item (functionality) For every TM $M$, the string $\ObfM$ describes a machine computing the same function as $M$;
 		\item (polynomial slowdown)  For every TM $M$, the description length and the running time of $\ObfM$ are polynomially larger than that of $M$.
-		\item (VBB) For every TM $M$ and PPT $A$ there exists a PPT $S$ s.t. 
+		\item (VBB property) For every TM $M$ and PPT $A$ there exists a PPT $S$ s.t. 
 		$$ A(\ObfM) \indC S^M(1^{|M|}) $$
 		where $\indC$ denotes computational indistinguishability\footnote{Note that in the definition in \cite{VBB-imp} the machine $S$ has oracle access to a polynomially bounded version of $M$. For simplicity, in this report we will abuse notation and simply write $S^M$ referring to a poly-time bounded oracle access. }.
 	\end{itemize}
@@ -26,11 +26,21 @@ The definition above is the most general possible definition of TM-obfuscator: n
 
 \subsection{TM-obfuscation is impossible}
 
-To prove the impossibility of obfuscation we prove 
+To prove the impossibility of obfuscation in the strongest sense (as given in the formal definition above) we can prove that a weaker definition is not possible either. In particular we will focus about an adversary that cannot compute effectively any predicate of $M$ when having access to $\ObfM$.
+We will give an intuition of the original proof by proving that 2-TM obfuscators do not exist. Adapting the proof for TM-obfuscators is straightforward.
+
+\begin{mydef}[(Predicate) 2-TM obfuscators ]
+	A 2-TM obfuscator is defined in the same way as a TM obfuscator, except that the "VBB property" is defined as follows:
+	\begin{itemize}
+		\item (VBB property) For every pair of TM $M_1, M_2$ and PPT $A$ there exists a PPT $S$ s.t. 
+		$$ |\Pr[A(\Obf(M_1), \Obf(M_2)) - \Pr[ S^{M_1,M_2}(1^{|M_1|+|M_2|})]| \leq \negl(min(|M_1|, |M_2|)) $$
+	\end{itemize}
+\end{mydef} 
+
+% XXX: Should I state the theorem formally?
+
 
 In the following we sketch the proof for a weaker result: that 2-TM obfuscation is not possible.
-
-A 2-TM obfuscator is defined as a TM-obfuscator with the difference that ...
 
 If VBB were possible [say about the difference between the representation and not]
 
@@ -39,6 +49,16 @@ If VBB were possible [say about the difference between the representation and no
 It is possible to extend the argument above to TM-obfuscators by building a machine that composes the [two machines above]. [Analogous observations hold]
 
 \subsection{Other impossibility results}
+
+% Circuits
+% Unobfuscatable functions
+% Approximate obfuscators
+
+% Applications: types of encryption...
+
+% watermarking
+
+% 
 
 In \cite{VBB-imp} 
 
