@@ -1,6 +1,33 @@
 \section{Impossibility of VBB}
 
+In this section we formalize VBB obfuscators for Turing Machines and we sketch a proof of the impossibility result in \cite{VBB-imp}. We wil also discuss the impossibility of variants of the original VBB definition as well as the impossibility of applications of obfuscations.
+
+\begin{comment}
+In this section:
+- definition of VBB
+- sketch proof
+\end{comment}
+
+\begin{mydef}[TM-obfuscator]
+	A program $\Obf$ is an obfuscation if the following three conditions hold: % Complexity of O?
+	\begin{itemize}
+		\item (functionality) For every TM $M$, the string $\ObfM$ describes a machine computing the same function as $M$;
+		\item (polynomial slowdown)  For every TM $M$, the description length and the running time of $\ObfM$ are polynomially larger than that of $M$.
+		\item (VBB) For every TM $M$ and PPT $A$ there exists a PPT $S$ s.t. 
+		$$ A(\ObfM) \indC S^M(1^{|M|}) $$
+		where $\indC$ denotes computational indistinguishability\footnote{Note that in the definition in \cite{VBB-imp} the machine $S$ has oracle access to a polynomially bounded version of $M$. For simplicity, in this report we will abuse notation and simply write $S^M$ referring to a poly-time bounded oracle access. }.
+	\end{itemize}
+\end{mydef}
+
+The definition above is the most general possible definition of TM-obfuscator: no adversary would be able to get effectively anything more from $\ObfM$ than what it could get from oracle access to $M$. We can increasingly weaken this definition by considering an adversary that, by accessing $\ObfM$, cannot effectively compute a witness $w$ s.t. $R(M,w)$ for any relation $R$, compute any function $f(M)$ or decide any predicate $\pi(M)$.
+
+
+%It is possible to provide similar definitions for obfuscation of circuits \cite{VBB-imp}.
+
 \subsection{TM-obfuscation is impossible}
+
+To prove the impossibility of obfuscation we prove 
+
 In the following we sketch the proof for a weaker result: that 2-TM obfuscation is not possible.
 
 A 2-TM obfuscator is defined as a TM-obfuscator with the difference that ...
@@ -14,3 +41,7 @@ It is possible to extend the argument above to TM-obfuscators by building a mach
 \subsection{Other impossibility results}
 
 In \cite{VBB-imp} 
+
+\subsection{Indistinguishability Obfuscation}
+
+% Definition here
