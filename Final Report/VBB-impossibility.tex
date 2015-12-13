@@ -9,6 +9,7 @@ In this section:
 \end{comment}
 
 \begin{mydef}[TM-obfuscator]
+	\label{def:VBB-tm}
 	A program $\Obf$ is an obfuscation if the following three conditions hold: % Complexity of O?
 	\begin{itemize}
 		\item (functionality) For every TM $M$, the string $\ObfM$ describes a machine computing the same function as $M$;
@@ -51,16 +52,28 @@ It is possible to extend the argument above to TM-obfuscators by building a mach
 \subsection{Other impossibility results}
 
 % Circuits
-% Unobfuscatable functions
+The impossibility results for TM obfuscations also extend to other types of obfuscations.
+In \cite{VBB-imp} the authors show the following result for \emph{circuit obfuscators}, the circuit counterpart of TM obfuscators defined in the natural way:
+
+\begin{mytheorem}
+	If one-way functions exist, then circuit obfuscators do not exist.
+\end{mytheorem}
+
+% Unobfuscatable functions %XXX: Maybe, maybe not
 % Approximate obfuscators
+As discussed so far we cannot that hope for natural, strong definitions of obfuscation to exist. We will now present results in \cite{VBB-imp} on weaker variants of obfuscations and potential applications.
+
+One of the requirements we made in Definition \ref{def:VBB-tm} was that the obfuscated program should compute \emph{exactly} the same function as the original program. Could we obtain obfuscation if we relaxed our definition by allowing obfuscators to produce a program "approximately" the same as the original one?
+The answer is negative. We can define an $\epsilon$-approximate obfuscator as one that returns on all inputs give the correct answer with probability higher than $1-\epsilon$ \cite{VBB-imp}. As for circuit obfuscation, if one-way functions exist, then $\epsilon$-approximate obfuscators do not exist.
 
 % Applications: types of encryption...
+We could consider these negative results as the byproduct of small issues in our definition of VBB. In \cite{VBB-imp} the authors show this is not the case and that there is something inherently flawed in the idea of "Virtual Black Box". Maybe, despite these general impossibility results --- they suggest --- we can still obtain obfuscation for specific applications. Unfortunately this is not the case. They consider applications such as: signature schemes, private-key encryption, pseudorandom functions and message authentication codes. They prove that, if each of these primitives exists, then some instances of them must be "unobfuscatable".
+Finally they show that, conditional to Decisional Diffie Helman being "hard", there exist families of low-complexity functions (i.e. computable by $TC_0$ circuits) that are unobfuscatable.
 
-% watermarking
+% Watermarking
+Another consequence of the results in \cite{VBB-imp} is the impossibility of general \emph{(fragile) watermarking} algorithms \cite{}. %XXX: citation on watermarkin
+Watermarking is the problem of marking an object in a way that it would be hard to remove the mark without inevitably ruining the object. \cite{VBB-imp} presents two definitions of watermarking and prove their (conditional) impossibility, building on the previous results on VBB obfuscation.
 
-% 
-
-In \cite{VBB-imp} 
 
 \subsection{Indistinguishability Obfuscation}
 
