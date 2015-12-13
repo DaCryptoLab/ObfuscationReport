@@ -1,0 +1,8 @@
+*.aux
+*.bak
+*.log
+Final Report/main.bbl
+*.blg
+Final Report/main.dvi
+Final Report/main.pdf
+*.gz
