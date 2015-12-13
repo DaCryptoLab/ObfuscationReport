@@ -44,12 +44,29 @@ Let us first observe  that there is no way we can transform $\pi$ in a single-ro
 One natural way to conceive the two rounds is to have the players commit to their private inputs and randomness in the first round.
 In the second round we want to "compress" the original $t$ rounds of $\pi$ letting each player $P_i$ broadcast $t$ obfuscated programs
 $\iO(f^i_1),...,\iO(f^i_t)$. Intuitively, the $j$-th obfuscated program computes the message at round $j$ for $P_i$ in the original protocol $\pi$.
+% XXX: More on this?
 
 % Problem with current layout: reset attacks
-
+In contrast with the original protocol, the solution sketched so far is vulnerable to "reset" attacks: the obfuscated programs can be evaluated on multiple inputs. Roughly, we want them to be usable only on a specific set of values, i.e. the private inputs and randomness of each player.
 % How to solve the reset attacks problem
+We can augment each obfuscated program for round $j$ to use NIZKs that would prove consistency with the values committed in the first round \emph{and} with the values and messages generated from the obfuscated programs before round $j$. The obfuscated programs should then \emph{(i)} output these NIZKs on the fly, and \emph{(ii)} check that the NIZKs from the other parties are correct.
 
 % Summing up and having a closer look
+\subsubsection{A closer look at the protocol}
+% Say about the CRS
+
+% Three stages
+The protocol works in three stages:\\
+\noindent
+\textbf{Round 1}
+
+\noindent
+\textbf{Round 2}
+
+\noindent
+\textbf{Evaluation (MPC in the Head)}
+
+
 
 
 \subsubsection{Model and Tools: NIZK, CRS model, CCA-security}
