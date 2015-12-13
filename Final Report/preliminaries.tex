@@ -2,9 +2,14 @@
 
 Here we define all cryptographic primitives that we will use in this report. We will say that a function $f(\lambda)$ is negligible if $f(\lambda)\in o(1/p(\lambda))$ for any polynomial $p$. In this case we will abuse notation and write $f(\lambda)=\negl(\lambda)$.
 
-Two distributions $D_0,D_1$ over a universe $U\in\bit^n$ are called indistinguishable, writing $D_0\compind D_1$, if for any PPT algorithm $A$, it holds that
+Two distributions $D_0,D_1$ over a universe $U\in\bit^n$ are called indistinguishable, denoted by $D_0\compind D_1$, if for any PPT algorithm $A$, it holds that
 \[
 \left|\Pr_{x\gets D_0}[A(x)=1]-\Pr_{x\gets D_1}[A(x)=1]\right|=\negl(n)
+\]
+
+Two oracles $O^0,O^1$ are called \emph{oracle indistinguishable}, denoted by $O^0\orind O^1$, if for any PPT algorithm $A$, it holds that
+\[
+\left|\Pr\left[A^{O^0}=1]-\Pr[A^{O^1}=1\right]\right|=\negl(n)
 \]
 
 \subsection{Indistinguishability Obfuscation}
@@ -71,4 +76,24 @@ where the distributions are over the randomness of $\prfgen$ and $\prfpunc$.
 \end{itemize}
 \end{mydef}
 
-In the following we will also make use of a secret-key encryption scheme $(\senc,\sdec)$ which is single message secure; i.e. for any two messages $m_0,m_1$ it holds that $\senc_k(m_0)\compind\senc_k(m_1)$, where $k\gets\bit^n$. 
+In the following we will also make use of a secret-key encryption scheme $(\senc,\sdec)$ which is single message secure; i.e. for any two messages $m_0,m_1$ it holds that $\senc_k(m_0)\compind\senc_k(m_1)$, where $k\gets\bit^n$.
+
+
+\subsection{Deniable Encryption}
+Suppose that we have retrieved from a user her public key $pk$ and we have encrypted a message $m$ under $pk$ and retrieved a ciphertext $c$. Later on, someone may force us to reveal to him the original message by revealing the initial randomness we used. If we were able to find a randomness for any possible message then we would be able to avoid this situation. Informally, the scheme is deniable if given $c$ and any possible message $m'$ we are able to find an explanation randomness $e$, such that if we encrypt $m'$ with $e$ we get again the same ciphertext $c$. The scheme is publicly deniable if moreover, we can explain the ciphertext without need of the original randomness.
+
+\begin{mydef}
+A publicly deniable encryption scheme consists of the following algorithms $\DESetup(1^\lambda)\to(pk,sk)$, $\DEEnc_{pk}(m,u)\to c$ (where $u$ is the randomness), $\DEDec_{sk}(c)\to m$ and $\DEExp(pk,c,m,r)\to e$ (where $r$ is the randomness) and satisfies the following properties:
+\begin{itemize}
+\item (correctness) For any $m$, if $(pk,sk)\gets \DESetup(1^\lambda)$ then
+\[
+\DEDec_{sk}\left(\DEEnc_{pk}(m)\right)=m
+\]
+\item (IND-CPA) For $b\in\bit$ define oracles $C^b(m_0,m_1)=\DEEnc_{pk}(m_b,u)$. Then $$(pk,C^0)\orind(pk,C^1)$$.
+\item (indistinguishability of explanations) Let $O^0(m)=\left(\DEEnc_{pk}(m,u),u\right)$ and $O^1(m)=\left(\DEEnc_{pk}(m,u),\DEExp\left(pk,\DEEnc_{pk}(m,u),m,r\right)\right)$. Then
+\[
+O^0\orind O^1
+\]
+\end{itemize}
+\end{mydef}
+Intuitively, the indistinguishability of explanations property states that the adversary cannot distinguish if she receives the original randomness or the explanation.
