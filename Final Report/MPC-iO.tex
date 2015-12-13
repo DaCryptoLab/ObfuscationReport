@@ -1,7 +1,13 @@
 \section{2-round MPC from $\iO$}
 
-
+In \cite{MPC-iO} $\iO$ is used as a building block to obtain a 2-round MPC protocol in the CRS model. In MPC a group of mutually distrusting parties aims at computing a certain function of their input without revealing their inputs to each other. We can securely compute any function in this sense whenever the ratio of malicious adversaries is below a certain threshold \cite{}. %XXX: Cite Yao and GMW
 % Importance of round complexity (in applications) and what we know about the general case
+Much of recent research has focused on improving the efficiency of MPC protocols. An obvious way to measure the efficiency of a MPC protocol is its computational complexity. Round complexity has a certain practical importance, such as in the setting of computing on the web \cite{}, % XXX: Missing citation
+where a single server coordinates the computation and parties "log in" at different times without coordination.
+The optimal round complexity for MPC in the plain model is known to be 5 rounds \cite{katz2004round}. The work in \cite{MPC-iO} achieves the best bound for MPC in the CRS model as one round protocols are not possible in general.
+
+% General overview on the protocol
+
 
 % One of the results that stem from iO+OWF
 
@@ -11,7 +17,7 @@ What to say:
 - 
 \end{comment}
 
-% General overview on the protocol
+
 % two rounds: second round is a compiler
 
 
