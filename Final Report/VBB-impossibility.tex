@@ -1,6 +1,7 @@
 \section{Impossibility of VBB}
+\label{sec:VBB-imp}
 
-In this section we formalize VBB obfuscators for Turing Machines and we sketch a proof of the impossibility result in \cite{VBB-imp}. We wil also discuss the impossibility of variants of the original VBB definition as well as the impossibility of applications of obfuscations.
+In this section we formalize VBB obfuscators for Turing Machines and we sketch a proof of the impossibility result in \cite{VBB-imp}. We will also discuss the impossibility of variants of the original VBB definition as well as the impossibility of applications of obfuscations.
 
 \begin{comment}
 In this section:
@@ -38,22 +39,42 @@ We will give an intuition of the original proof by proving that 2-TM obfuscators
 	\end{itemize}
 \end{mydef} 
 
-% XXX: Should I state the theorem formally?
+% Proof
+The main idea behind the proof is that there is a difference between having oracle access to a function and getting a machine that can compute it. In the latter case we have a string on which we can do computations, possibly learning something from it.
+We will then consider a function that cannot be learned by oracle access. Consider the Turing Machine
+ $\function{UltimateAnswer}_q$, $\UA_q$ for short, that returns the 
+ answer to the ultimate question $q \in \bit^k$ on "life, the universe and everything" \cite{adams}.
+\[
+\UA_q(x) =
+\begin{cases} 
+\hfill 42    \hfill & \text{ if $x = q$} \\
+\hfill 0 \hfill & \text{otherwise} \\
+\end{cases}
+\]
+Now consider another Turing Machine $\function{TestUltimateAnswer}_q$, $\T_q$ for short, which given in input a machine $M$ distinguishes whether it provides the answer to the ultimate question $q \in \bit^k$ or not:
+\[
+\T_q(M) =
+\begin{cases} 
+\hfill 1    \hfill & \text{ if $M(q) = 42$} \\
+\hfill 0 \hfill & \text{otherwise} \\
+\end{cases}
+\]
 
+% There is an adversary that can learn "a lot" even from obfuscation.
+Consider a very simple adversary that given two (obfuscated) TMs as input simply runs the second TM on the first one, i.e. $A(M_1, M_2) = M_2(M_1)$. Having access to obfuscations of $\UA_q$ and $\T_q$ $A$ can clearly learn something. In particular, for any $q \in \bit^k$:
+\begin{equation} \Pr[A(\Obf(\UA_q), \Obf(\T_q) = 1] = 1 \end{equation}
 
-In the following we sketch the proof for a weaker result: that 2-TM obfuscation is not possible.
+What can we say about what an arbitrary poly-time machine $S$ can learn from $\UA_q$ and $\T_q$ having oracle access to them? $S$ would not be able to pass the representation of $\UA_q$ as $A$ could. Also, it would be extremely unlikely for $S$ to sample the only point $q$ where $\UA_q$ does not return $0$. If we call $\Z$ the identically null function, we have:
+\begin{equation} |\Pr[S^{\UA_q, \T_q}(1^k)] - \Pr[S^{\Z, \T_q}(1^k)]| \leq 2^{\Omega(k)}\end{equation}
 
-If VBB were possible [say about the difference between the representation and not]
-
-[Proof]
-
-It is possible to extend the argument above to TM-obfuscators by building a machine that composes the [two machines above]. [Analogous observations hold]
+On the other hand \begin{equation} \Pr[A(\Obf(\Z), \Obf(\T_q) = 1] = 0 \end{equation}
+Combining $(1)$, $(2)$ and $(3)$ it is easy to show a contradiction.
 
 \subsection{Other impossibility results}
 
 % Circuits
 The impossibility results for TM obfuscations also extend to other types of obfuscations.
-In \cite{VBB-imp} the authors show the following result for \emph{circuit obfuscators}, the circuit counterpart of TM obfuscators defined in the natural way:
+In \cite{VBB-imp} the authors define \emph{circuit obfuscators}, the circuit counterpart of TM obfuscators. They also providethe following result:
 
 \begin{mytheorem}
 	If one-way functions exist, then circuit obfuscators do not exist.
@@ -69,12 +90,11 @@ The answer is negative. We can define an $\epsilon$-approximate obfuscator as on
 % Applications: types of encryption...
 We could consider these negative results as the byproduct of small issues in our definition of VBB. In \cite{VBB-imp} the authors show this is not the case and that there is something inherently flawed in the idea of "Virtual Black Box". Maybe, despite these general impossibility results --- they suggest --- we can still obtain obfuscation for specific applications. Unfortunately this is not the case. They consider applications such as: signature schemes, private-key encryption, pseudorandom functions and message authentication codes. They prove that, if each of these primitives exists, then some instances of them must be "unobfuscatable".
 Finally they show that, conditional to Decisional Diffie Helman being "hard", there exist families of low-complexity functions (i.e. computable by $TC_0$ circuits) that are unobfuscatable.
+Later \cite{VBB-imp-aux} presented other impossibility results on VBB obfuscation proving its impossibility for adversaries with auxiliary inputs.
 
 % Watermarking
-Another consequence of the results in \cite{VBB-imp} is the impossibility of general \emph{(fragile) watermarking} algorithms \cite{}. %XXX: citation on watermarkin
+Another consequence of the results in \cite{VBB-imp} is the impossibility of general \emph{(fragile) watermarking} algorithms \cite{collberg2002watermarking}. 
 Watermarking is the problem of marking an object in a way that it would be hard to remove the mark without inevitably ruining the object. \cite{VBB-imp} presents two definitions of watermarking and prove their (conditional) impossibility, building on the previous results on VBB obfuscation.
 
-
-\subsection{Indistinguishability Obfuscation}
 
 % Definition here

@@ -1,8 +1,9 @@
 \section{2-round MPC from $\iO$}
+\label{sec:iO-mpc}
 
-In \cite{MPC-iO} $\iO$ is used as a building block to obtain a 2-round MPC protocol in the CRS model. In MPC a group of mutually distrusting parties aims at computing a certain function of their input without revealing their inputs to each other. We can securely compute any function in this sense whenever the ratio of malicious adversaries is below a certain threshold \cite{}. %XXX: Cite Yao and GMW
+In \cite{MPC-iO} $\iO$ is used as a building block to obtain a 2-round MPC protocol in the CRS model. In MPC a group of mutually distrusting parties aims at computing a certain function of their input without revealing their inputs to each other. We can securely compute any function in this sense whenever the ratio of malicious adversaries is below a certain threshold \cite{yao1982protocols,goldreich1987play}.
 % Importance of round complexity (in applications) and what we know about the general case
-Much of recent research has focused on improving the efficiency of MPC protocols. An obvious way to measure the efficiency of a MPC protocol is its computational complexity. Round complexity has a certain practical importance, such as in the setting of computing on the web \cite{}, % XXX: Missing citation
+Much of recent research has focused on improving the efficiency of MPC protocols. An obvious way to measure the efficiency of a MPC protocol is its computational complexity. Round complexity has a certain practical importance, such as in the setting of computing on the web \cite{halevi2011secure}, 
 where a single server coordinates the computation and parties "log in" at different times without coordination.
 The optimal round complexity for MPC in the plain model is known to be 5 rounds \cite{katz2004round}. The work in \cite{MPC-iO} achieves the best bound for MPC in the CRS model as one round protocols are not possible in general.
 
@@ -17,24 +18,7 @@ The main result of \cite{MPC-iO} is a compiler transforming any MPC protocol int
 The resulting protocol resists static malicious corruptions in the UC setting \cite{canetti2001universally}.
 Although the authors of \cite{MPC-iO} claimed otherwise, \cite{gordon2015constant} recently pointed out that no 2-round protocol can achieve fairness (even in the CRS model).
 
-
-
-
-
-% One of the results that stem from iO+OWF
-
-
-\begin{comment}
-What to say: (see notepad)
-- 
-\end{comment}
-
-
-% two rounds: second round is a compiler
-
-
-
-\subsection{Protocol}
+\subsection{Overview}
 In the next paragraphs we will give an informal view of the compiler.
 We assume the existence of a $t$-round MPC protocol $\pi$. % XXX: Other assumptions on \pi?
 % We cannot do one round
@@ -43,7 +27,7 @@ Let us first observe  that there is no way we can transform $\pi$ in a single-ro
 % Rough explanations of two rounds
 One natural way to conceive the two rounds is to have the players commit to their private inputs and randomness in the first round.
 In the second round we want to "compress" the original $t$ rounds of $\pi$ letting each player $P_i$ broadcast $t$ obfuscated programs
-$\iO(f^i_1),...,\iO(f^i_t)$. Intuitively, the $j$-th obfuscated program computes the message at round $j$ for $P_i$ in the original protocol $\pi$.
+$\iO(\Prog_{i,1}),...,\iO(\Prog_{i,t})$. Intuitively, the $j$-th obfuscated program computes the message at round $j$ for $P_i$ in the original protocol $\pi$.
 % XXX: More on this?
 
 % Problem with current layout: reset attacks
@@ -52,24 +36,55 @@ In contrast with the original protocol, the solution sketched so far is vulnerab
 We can augment each obfuscated program for round $j$ to use NIZKs that would prove consistency with the values committed in the first round \emph{and} with the values and messages generated from the obfuscated programs before round $j$. The obfuscated programs should then \emph{(i)} output these NIZKs on the fly, and \emph{(ii)} check that the NIZKs from the other parties are correct.
 
 % Summing up and having a closer look
-\subsubsection{A closer look at the protocol}
-% Say about the CRS
-
-% Three stages
-The protocol works in three stages:\\
-\noindent
-\textbf{Round 1}
+\subsection{A closer look at the protocol}
+Protocol $\Pi$ uses and indistinguishability Obfuscator $\iO$, a NIZK proof system (K, P,V), a CCA-secure PKE
+$(\pkGen, \pkEnc, \pkDec)$
+scheme with perfect correctness and an n-party semi-honest MPC protocol $\pi$.
 
 \noindent
-\textbf{Round 2}
+\textbf{Private Inputs:} Party $P_i$ for $i \in [n]$ receives $x_i$.
 
 \noindent
-\textbf{Evaluation (MPC in the Head)}
+\textbf{Common Reference String:} Let $\sigma \gets K(1^{\lambda})$ and $(pk, \cdot) \gets \pkGen(1^{\lambda})$ and then output $(\sigma, pk)$ as the common reference string.
+
+\noindent
+\textbf{Round 1:} Each party $P_i$:
+\begin{itemize}
+	\item generates a commitment $c_i$ to $x_i$ (using $\pkEnc$);
+	\item $\forall\ j \in [n]$ it samples randomness $r_{i,j}$ and produces corresponding commitments $d_{i,j}$ (using $\pkEnc$);
+	\item broadcasts $Z_i = \{c_i, \{ d_{i,j} \}_{j \in [n]}  \}$.
+\end{itemize}
+
+\noindent
+\textbf{Round 2:} Each party $P_i$:
+\begin{itemize}
+	\item for every $j \in [n], j \not = i$ generates $\gamma_{i,j}$ as the NIZK proof that "$d_{i,j}$ is a commitment for $r_{i,j}$";
+	\item generates a sequence of obfuscations $\iO_{i,1},...,\iO_{i,t}$ where $\iO_{i,j}$ is the obfuscation of the program $\Prog_{i,j}$ described below;
+	\item broadcasts $( \{ r_{i,j}, \gamma_{i,j} \}_{j \in [n], j \not = i}, \{ \iO_{i,j} \}_{j \in [t]})$.
+\end{itemize}
+
+% Description of programs
+The following is an informal description of $\Prog_{i,j}$ for $i \in [n], j \in [t]$.
+Given as input transcript up to round $j-1$ $\tau_{j-1}$, the $\phi_{i,\cdot}$ NIZK proofs (see below) up to round $j-1$ $\Phi_{j-1}$, the NIZK proofs $\Gamma = \{ \gamma_{i,j} \}_{i,j}$ and randomness $R = \{ r_{i,j} \}_{i,j}$ with $\gamma_{i,j}$ and $r_{i,j}$ defined as above:
+
+\[
+\Prog_{i,j}(\tau_{j-1}, \Phi_{j-1}, \Gamma, R) =
+\begin{cases} 
+\hfill (m_{i,j}, \phi_{i,j})    \hfill & \text{ if all $\phi \in \Phi_{j-1}$ and $\gamma \in \Gamma$ are accepting proofs} \\
+\bot \hfill & \text{ otherwise } \\
+\end{cases}
+\]
+
+where $m_{i,j}$ is $P_i$'s message at round $j$ in the original protocol $\pi$ and $\phi_{i,j}$ is a NIZK proof that $m_{i,j}$ is consistent with $\tau_{j-1}$ and $R$.
+
+% Evaluation step
+\noindent
+\textbf{Evaluation (MPC in the Head):} For each $j \in [n]$ proceed by generating $\tau_{j-1}, \Phi_{j-1}, \Gamma \mbox{ and } R$ and evaluate $\iO_j$ of program $\Prog_{i,j}$ obtaining $m_{1,j},...,m_{n,j}$
+and $\phi_{1,j},...,\phi_{n,j}$. Finally each party $P_i$ outputs $m_{i,t}$.
 
 
 
 
 \subsubsection{Model and Tools: NIZK, CRS model, CCA-security}
 
-\subsection{Sketch of Security Proof}
 
