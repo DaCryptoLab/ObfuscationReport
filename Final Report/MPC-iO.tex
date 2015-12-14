@@ -34,7 +34,7 @@ What to say: (see notepad)
 
 
 
-\subsection{Protocol}
+\subsection{Overview}
 In the next paragraphs we will give an informal view of the compiler.
 We assume the existence of a $t$-round MPC protocol $\pi$. % XXX: Other assumptions on \pi?
 % We cannot do one round
@@ -52,19 +52,51 @@ In contrast with the original protocol, the solution sketched so far is vulnerab
 We can augment each obfuscated program for round $j$ to use NIZKs that would prove consistency with the values committed in the first round \emph{and} with the values and messages generated from the obfuscated programs before round $j$. The obfuscated programs should then \emph{(i)} output these NIZKs on the fly, and \emph{(ii)} check that the NIZKs from the other parties are correct.
 
 % Summing up and having a closer look
-\subsubsection{A closer look at the protocol}
-% Say about the CRS
-
-% Three stages
-The protocol works in three stages:\\
-\noindent
-\textbf{Round 1}
+\subsection{A closer look at the protocol}
+Protocol $\Pi$ uses and indistinguishability Obfuscator $\iO$, a NIZK proof system (K, P,V), a CCA-secure PKE
+$(\pkGen, \pkEnc, \pkDec)$
+scheme with perfect correctness and an n-party semi-honest MPC protocol $\pi$.
 
 \noindent
-\textbf{Round 2}
+\textbf{Private Inputs:} Party $P_i$ for $i \in [n]$ receives $x_i$.
 
 \noindent
-\textbf{Evaluation (MPC in the Head)}
+\textbf{Common Reference String:} Let $\sigma \gets K(1^{\lambda})$ and $(pk, \cdot) \gets \pkGen(1^{\lambda})$ and then output $(\sigma, pk)$ as the common reference string.
+
+\noindent
+\textbf{Round 1:} Each party $P_i$:
+\begin{itemize}
+	\item generates a commitment $c_i$ to $x_i$ (using $\pkEnc$);
+	\item $\forall\ j \in [n]$ it samples randomness $r_{i,j}$ and produces corresponding commitments $d_{i,j}$ (using $\pkEnc$);
+	\item broadcasts $Z_i = \{c_i, \{ d_{i,j} \}_{j \in [n]}  \}$.
+\end{itemize}
+
+\noindent
+\textbf{Round 2:} Each party $P_i$:
+\begin{itemize}
+	\item for every $j \in [n], j \not = i$ generates $\gamma_{i,j}$ as the NIZK proof that "$d_{i,j}$ is a commitment for $r_{i,j}$";
+	\item generates a sequence of obfuscations $\iO_{i,1},...,\iO_{i,t}$ where $\iO_{i,j}$ is the obfuscation of the program $\Prog_{i,j}$ described below;
+	\item broadcasts $( \{ r_{i,j}, \gamma_{i,j} \}_{j \in [n], j \not = i}, \{ \iO_{i,j} \}_{j \in [t]})$.
+\end{itemize}
+
+% Description of programs
+The following is an informal description of $\Prog_{i,j}$ for $i \in [n], j \in [t]$.
+Given as input transcript up to round $j-1$ $\tau_{j-1}$, the $\phi_{i,\cdot}$ NIZK proofs (see below) up to round $j-1$ $\Phi_{j-1}$, the NIZK proofs $\Gamma = \{ \gamma_{i,j} \}_{i,j}$ and randomness $R = \{ r_{i,j} \}_{i,j}$ with $\gamma_{i,j}$ and $r_{i,j}$ defined as above:
+
+\[
+\Prog_{i,j}(\tau_{j-1}, \Phi_{j-1}, \Gamma, R) =
+\begin{cases} 
+\hfill (m_{i,j}, \phi_{i,j})    \hfill & \text{ if all $\phi \in \Phi_{j-1}$ and $\gamma \in \Gamma$ are accepting proofs} \\
+\bot \hfill & \text{ otherwise } \\
+\end{cases}
+\]
+
+where $m_{i,j}$ is $P_i$'s message at round $j$ in the original protocol $\pi$ and $\phi_{i,j}$ is a NIZK proof that $m_{i,j}$ is consistent with $\tau_{j-1}$ and $R$.
+
+% Evaluation step
+\noindent
+\textbf{Evaluation (MPC in the Head):} For each $j \in [n]$ proceed by generating $\tau_{j-1}, \Phi_{j-1}, \Gamma \mbox{ and } R$ and evaluate $\iO_j$ of program $\Prog_{i,j}$ obtaining $m_{1,j},...,m_{n,j}$
+and $\phi_{1,j},...,\phi_{n,j}$. Finally each party $P_i$ outputs $m_{i,t}$.
 
 
 
