@@ -70,12 +70,11 @@ The answer is negative. We can define an $\epsilon$-approximate obfuscator as on
 % Applications: types of encryption...
 We could consider these negative results as the byproduct of small issues in our definition of VBB. In \cite{VBB-imp} the authors show this is not the case and that there is something inherently flawed in the idea of "Virtual Black Box". Maybe, despite these general impossibility results --- they suggest --- we can still obtain obfuscation for specific applications. Unfortunately this is not the case. They consider applications such as: signature schemes, private-key encryption, pseudorandom functions and message authentication codes. They prove that, if each of these primitives exists, then some instances of them must be "unobfuscatable".
 Finally they show that, conditional to Decisional Diffie Helman being "hard", there exist families of low-complexity functions (i.e. computable by $TC_0$ circuits) that are unobfuscatable.
+Later \cite{} presented other impossibility results on VBB obfuscation proving its impossibility for adversaries with auxiliary inputs.
 
 % Watermarking
 Another consequence of the results in \cite{VBB-imp} is the impossibility of general \emph{(fragile) watermarking} algorithms \cite{collberg2002watermarking}. 
 Watermarking is the problem of marking an object in a way that it would be hard to remove the mark without inevitably ruining the object. \cite{VBB-imp} presents two definitions of watermarking and prove their (conditional) impossibility, building on the previous results on VBB obfuscation.
 
-
-\subsection{Indistinguishability Obfuscation}
 
 % Definition here
