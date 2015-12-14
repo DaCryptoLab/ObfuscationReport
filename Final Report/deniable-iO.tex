@@ -1,7 +1,7 @@
 \section{From $\iO$ to Deniable Encryption of one bit}
-<<<<<<< HEAD
 
-The construction makes the following assumptions:
+
+The construction uses the following assumptions:
 \begin{itemize}
 \item A public key encryption scheme $(\pgen,\penc,\pdec)$. Here, the randomness of the encryption algorithm is made explicit; i.e. $\penc_{pk}(m,r)\to c$.
 \item Three puncturable PRFs $(\{f_k^1\}_k,\{f_k^2\}_k,\{f_k^3\}_k)$
@@ -9,23 +9,47 @@ The construction makes the following assumptions:
 \item An indistinguishability obfuscator $\iO$
 \end{itemize}
 
-The construction is the following:
+First, we define the following two algorithms. These algorithms define how we encrypt a message and how we explain a ciphertext. Now our public key will just consist of the indistinguishability obfuscation of these two algorithms. We use the first one to encrypt and the second one to explain.
 
+\begin{figure}[h]
+\centering
+\fbox{
+\begin{varwidth}{\textwidth}
+$\enc(m,(u_1,u_2))$:
+\begin{enumerate}
+\item constants $pk,k_1,k_2,k_3$
+\item $(m',c',r')\gets f^3_{k_3}(u_1)\oplus u_2$
+\item If $m=m'$ and $u_1=f^2_{k_2}(m',c',r')$ then return $c'$
+\item Else $x\gets f^1_{k_1}(m,(u_1,u_2))$; return $\penc_{pk}(m,x)$
+\end{enumerate}
+\end{varwidth}}
+\end{figure}
 
-\newcommand*\Let[2]{\State #1 $\gets$ #2}
+\begin{figure}[h]
+\centering
+\fbox{
+\begin{varwidth}{\textwidth}
+$\explain(m,c,r)$:
+\begin{enumerate}
+\item constants $k_2,k_3$
+\item $\alpha\gets f^2_{k_2}(m,c,G(r))$
+\item $\beta\gets f^3_{k_3}(\alpha)\oplus (m,c,G(r))$
+\item Return $(\alpha,\beta)$
+\end{enumerate}
+\end{varwidth}}
+\end{figure}
+Now, the four algorithms of the deniable public key encryption scheme are defined as follows:
+\begin{itemize}
+\item $\DESetup(1^n):$ $(pk,sk)\gets\pgen$; pick $k_1,k_2,k_3$; return $sk$ as the secret key and $(\iO(\enc),\iO(\explain))$ as the public key.
+\item $\DEEnc_{pk}(m,u)$: Parse $(C_1,C_2)=pk$; return $C_1(m,u)$
+\item $\DEDec_{sk}(c)$: $\pdec_{sk}(c)$
+\item $\DEExp(pk,m,c,r)$: Parse $(C_1,C_2)=pk$; return $C_2(m,c,r)$
+\end{itemize}
 
-  \begin{algorithmic}[1]
-    \Function{$\enc_{pk}$}{$m,(u_1,u_2)$}
-      \State constants $k_1,k_2,k_3$
-      \State $(m',c',r')\gets f^3(u_1)\oplus u_2$
-      \If{$m=m'$ and $u_1=f^2_{k_2}(m',c',r')$}
-          \State \Return{$c'$}
-      \Else
-          \State $x\gets f^1_{k_1}(m,u)$
-          \State \Return{$\penc_{pk}(m,x)$}
-      \EndIf
-    \EndFunction
-  \end{algorithmic}
-=======
+\begin{mytheorem}
+The above scheme is a publicly deniable encryption scheme; i.e. it is IND-CPA secure and has the property of the indistinguishability of explanations.
+\end{mytheorem}
+\begin{proof}[Proof Sketch]
+The IND-CPA security is based only on the pseudorandomness of $f^1$. For the indistinguishability of explanations, we define a sequence of games such that each of them is indistinguishable from the next. The idea behind these games is the following. In each game we puncture out a challenge value (the challenge message, the challenge ciphertext, the challenge randomness or the challenge explanation). If we guarantee that puncturing out this value does not change the functionality of our two programs then $\iO$ implies that the games are indistinguishable. But then, from the pseudorandomness of the punctured points (a property guaranteed by the punctured PRFs), we get that we can replace this challenge value with a random one. In the final step, both the challenge randomness and the explanation are two uniform strings and thus indistinguishable.
+\end{proof}
 \label{sec:iO-deniable}
->>>>>>> origin/master
