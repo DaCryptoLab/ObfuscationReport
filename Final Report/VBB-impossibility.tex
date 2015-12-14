@@ -41,8 +41,6 @@ We will give an intuition of the original proof by proving that 2-TM obfuscators
 
 % Proof
 The main idea behind the proof is that there is a difference between having oracle access to a function and getting a machine that can compute it. In the latter case we have a string on which we can do computations, possibly learning something from it.
-\newcommand{\UA}{\function{UA}}
-\newcommand{\T}{\function{T}}
 We will then consider a function that cannot be learned by oracle access. Consider the Turing Machine
  $\function{UltimateAnswer}_q$, $\UA_q$ for short, that returns the 
  answer to the ultimate question $q \in \bit^k$ on "life, the universe and everything" \cite{adams}.
@@ -53,7 +51,7 @@ We will then consider a function that cannot be learned by oracle access. Consid
 \hfill 0 \hfill & \text{otherwise} \\
 \end{cases}
 \]
-Now consider another Turing Machine $\function{TestUltimateAnswer}_q$, $\T_q$ for short, which given in input a machine $M$ distinguishes whether it provides the answer to the ultimate question $q \in \bit^k}$ or not:
+Now consider another Turing Machine $\function{TestUltimateAnswer}_q$, $\T_q$ for short, which given in input a machine $M$ distinguishes whether it provides the answer to the ultimate question $q \in \bit^k$ or not:
 \[
 \T_q(M) =
 \begin{cases} 
@@ -62,7 +60,15 @@ Now consider another Turing Machine $\function{TestUltimateAnswer}_q$, $\T_q$ fo
 \end{cases}
 \]
 
+% There is an adversary that can learn "a lot" even from obfuscation.
+Consider a very simple adversary that given two (obfuscated) TMs as input simply runs the second TM on the first one, i.e. $A(M_1, M_2) = M_2(M_1)$. Having access to obfuscations of $\UA_q$ and $\T_q$ $A$ can clearly learn something. In particular, for any $q \in \bit^k$:
+\begin{equation} \Pr[A(\Obf(\UA_q), \Obf(\T_q) = 1] = 1 \end{equation}
 
+What can we say about what an arbitrary poly-time machine $S$ can learn from $\UA_q$ and $\T_q$ having oracle access to them? $S$ would not be able to pass the representation of $\UA_q$ as $A$ could. Also, it would be extremely unlikely for $S$ to sample the only point $q$ where $\UA_q$ does not return $0$. If we call $\Z$ the identically null function, we have:
+\begin{equation} |\Pr[S^{\UA_q, \T_q}(1^k)] - \Pr[S^{\Z, \T_q}(1^k)]| \leq 2^{\Omega(k)}\end{equation}
+
+On the other hand \begin{equation} \Pr[A(\Obf(\Z), \Obf(\T_q) = 1] = 0 \end{equation}
+Combining $(1)$, $(2)$ and $(3)$ it is easy to show a contradiction.
 
 \subsection{Other impossibility results}
 
