@@ -1,2 +1,27 @@
 \section{From $\iO$ to Deniable Encryption of one bit}
 
+The construction makes the following assumptions:
+\begin{itemize}
+\item A public key encryption scheme $(\pgen,\penc,\pdec)$. Here, the randomness of the encryption algorithm is made explicit; i.e. $\penc_{pk}(m,r)\to c$.
+\item Three puncturable PRFs $(\{f_k^1\}_k,\{f_k^2\}_k,\{f_k^3\}_k)$
+\item A length doubling PRG $G$
+\item An indistinguishability obfuscator $\iO$
+\end{itemize}
+
+The construction is the following:
+
+
+\newcommand*\Let[2]{\State #1 $\gets$ #2}
+
+  \begin{algorithmic}[1]
+    \Function{$\enc_{pk}$}{$m,(u_1,u_2)$}
+      \State constants $k_1,k_2,k_3$
+      \State $(m',c',r')\gets f^3(u_1)\oplus u_2$
+      \If{$m=m'$ and $u_1=f^2_{k_2}(m',c',r')$}
+          \State \Return{$c'$}
+      \Else
+          \State $x\gets f^1_{k_1}(m,u)$
+          \State \Return{$\penc_{pk}(m,x)$}
+      \EndIf
+    \EndFunction
+  \end{algorithmic}
