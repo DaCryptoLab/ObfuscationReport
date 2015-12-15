@@ -1,34 +1,13 @@
 \section{Impossibility of VBB}
 \label{sec:VBB-imp}
 
-In this section we formalize VBB obfuscators for Turing Machines and we sketch a proof of the impossibility result in \cite{VBB-imp}. We will also discuss the impossibility of variants of the original VBB definition as well as the impossibility of applications of obfuscations.
-
-\begin{comment}
-In this section:
-- definition of VBB
-- sketch proof
-\end{comment}
-
-\begin{mydef}[TM-obfuscator]
-	\label{def:VBB-tm}
-	A program $\Obf$ is an obfuscation if the following three conditions hold: % Complexity of O?
-	\begin{itemize}
-		\item (functionality) For every TM $M$, the string $\ObfM$ describes a machine computing the same function as $M$;
-		\item (polynomial slowdown)  For every TM $M$, the description length and the running time of $\ObfM$ are polynomially larger than that of $M$.
-		\item (VBB property) For every TM $M$ and PPT $A$ there exists a PPT $S$ s.t. 
-		$$ A(\ObfM) \indC S^M(1^{|M|}) $$
-		where $\indC$ denotes computational indistinguishability\footnote{Note that in the definition in \cite{VBB-imp} the machine $S$ has oracle access to a polynomially bounded version of $M$. For simplicity, in this report we will abuse notation and simply write $S^M$ referring to a poly-time bounded oracle access. }.
-	\end{itemize}
-\end{mydef}
-
-The definition above is the most general possible definition of TM-obfuscator: no adversary would be able to get effectively anything more from $\ObfM$ than what it could get from oracle access to $M$. We can increasingly weaken this definition by considering an adversary that, by accessing $\ObfM$, cannot effectively compute a witness $w$ s.t. $R(M,w)$ for any relation $R$, compute any function $f(M)$ or decide any predicate $\pi(M)$.
-
+In this section we discuss the impossibility of VBB obfuscators for Turing Machines \cite{VBB-imp}. We will also discuss the impossibility of variants of the original VBB definition as well as the impossibility of applications of obfuscations.
 
 %It is possible to provide similar definitions for obfuscation of circuits \cite{VBB-imp}.
 
 \subsection{TM-obfuscation is impossible}
 
-To prove the impossibility of obfuscation in the strongest sense (as given in the formal definition above) we can prove that a weaker definition is not possible either. In particular we will focus about an adversary that cannot compute effectively any predicate of $M$ when having access to $\ObfM$.
+To prove the impossibility of obfuscation in the strongest sense (as given in the formal definition above) we can prove that a weaker definition is not possible either. In particular we will focus about an adversary that cannot compute effectively any predicate of $M$ when having access to $\ObfM$ (see discussion at the end of Subsection \ref{subsec:VBB}).
 We will give an intuition of the original proof by proving that 2-TM obfuscators do not exist. Adapting the proof for TM-obfuscators is straightforward.
 
 \begin{mydef}[(Predicate) 2-TM obfuscators ]
@@ -82,7 +61,7 @@ In \cite{VBB-imp} the authors define \emph{circuit obfuscators}, the circuit cou
 
 % Unobfuscatable functions %XXX: Maybe, maybe not
 % Approximate obfuscators
-As discussed so far we cannot that hope for natural, strong definitions of obfuscation to exist. We will now present results in \cite{VBB-imp} on weaker variants of obfuscations and potential applications.
+As discussed so far we cannot hope for natural, strong definitions of obfuscation to exist. We will now present results in \cite{VBB-imp} on weaker variants of obfuscations and potential applications.
 
 One of the requirements we made in Definition \ref{def:VBB-tm} was that the obfuscated program should compute \emph{exactly} the same function as the original program. Could we obtain obfuscation if we relaxed our definition by allowing obfuscators to produce a program "approximately" the same as the original one?
 The answer is negative. We can define an $\epsilon$-approximate obfuscator as one that returns on all inputs give the correct answer with probability higher than $1-\epsilon$ \cite{VBB-imp}. As for circuit obfuscation, if one-way functions exist, then $\epsilon$-approximate obfuscators do not exist.

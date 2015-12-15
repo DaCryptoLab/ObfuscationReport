@@ -16,7 +16,7 @@ The main result of \cite{MPC-iO} is a compiler transforming any MPC protocol int
 
 % What's the threshold here?
 The resulting protocol resists static malicious corruptions in the UC setting \cite{canetti2001universally}.
-Although the authors of \cite{MPC-iO} claimed otherwise, \cite{gordon2015constant} recently pointed out that no 2-round protocol can achieve fairness (even in the CRS model).
+Although the authors of \cite{MPC-iO} claimed otherwise, \cite{gordon2015constant} recently pointed out that this protocol cannot achieve fairness. This because no 2-round protocol can, even in the CRS model.
 
 \subsection{Overview}
 In the next paragraphs we will give an informal view of the compiler.
@@ -64,8 +64,9 @@ scheme with perfect correctness and an n-party semi-honest MPC protocol $\pi$.
 \end{itemize}
 
 % Description of programs
+\noindent
 The following is an informal description of $\Prog_{i,j}$ for $i \in [n], j \in [t]$.
-Given as input transcript up to round $j-1$ $\tau_{j-1}$, the $\phi_{i,\cdot}$ NIZK proofs (see below) up to round $j-1$ $\Phi_{j-1}$, the NIZK proofs $\Gamma = \{ \gamma_{i,j} \}_{i,j}$ and randomness $R = \{ r_{i,j} \}_{i,j}$ with $\gamma_{i,j}$ and $r_{i,j}$ defined as above:
+The program takes as input $M_{j-1}$, the transcript up to round $j-1$; $\Phi_{j-1} = \{\phi_{i,j'} \}_{i \in [n], j' \leq j-1}$ the NIZK proofs up to round $j-1$ (details below); $\Gamma = \{ \gamma_{i,j} \}_{i \in [n],j \in [t]}$, the NIZK proofs for commitment, and $R = \{ r_{i,j} \}_{i \in [n],j \in [t]}$, the global randomness (where $\gamma_{i,j}$ and $r_{i,j}$ are defined as above).
 
 \[
 \Prog_{i,j}(\tau_{j-1}, \Phi_{j-1}, \Gamma, R) =

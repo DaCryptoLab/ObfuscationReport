@@ -12,6 +12,26 @@ Two oracles $O^0,O^1$ are called \emph{oracle indistinguishable}, denoted by $O^
 \left|\Pr\left[A^{O^0}=1]-\Pr[A^{O^1}=1\right]\right|=\negl(n)
 \]
 
+\subsection{Virtual Black Box Obfuscation}
+\label{subsec:VBB}
+The following is the definition of (VBB) obfuscator for a Turing Machine.
+
+\begin{mydef}[TM-obfuscator]
+\label{def:VBB-tm}
+A program $\Obf$ is an obfuscation if the following three conditions hold: % Complexity of O?
+\begin{itemize}
+\item (functionality) For every TM $M$, the string $\ObfM$ describes a machine computing the same function as $M$;
+\item (polynomial slowdown)  For every TM $M$, the description length and the running time of $\ObfM$ are polynomially larger than that of $M$.
+\item (VBB property) For every TM $M$ and PPT $A$ there exists a PPT $S$ s.t. 
+$$ A(\ObfM) \indC S^M(1^{|M|}) $$
+where $\indC$ denotes computational indistinguishability\footnote{Note that in the definition in \cite{VBB-imp} the machine $S$ has oracle access to a polynomially bounded version of $M$. For simplicity, in this report we will abuse notation and simply write $S^M$ referring to a poly-time bounded oracle access. }.
+\end{itemize}
+\end{mydef}
+
+The definition above is the most general possible definition of TM-obfuscator: no adversary would be able to get effectively anything more from $\ObfM$ than what it could get from oracle access to $M$. We can increasingly weaken this definition by considering an adversary that, by accessing $\ObfM$, cannot effectively compute a witness $w$ s.t. $R(M,w)$ for any relation $R$, compute any function $f(M)$ or decide any predicate $\pi(M)$.
+
+
+
 \subsection{Indistinguishability Obfuscation}
 
 Intuitively an indistinguishability obfuscator $\iO$ is an algorithm that takes as input a circuit and outputs an obfuscated circuit that preserves the functionality of the original one. The security definition states that the indistinguishability obfuscations of two functionally equivalent programs are indistinguishable.
@@ -31,6 +51,22 @@ where the distributions are over the randomness of $\iO$.
 \end{itemize}
 \end{mydef}
 
+\subsection{Tools for building MPC from $\iO$: UC, CRS, NIZK and CCA}
+
+% UC
+Universal Composition (UC) \cite{canetti2001universally} is a stringent security framework that guarantees secure under concurrent general composition with arbitrary sets of parties. For more details, the reader is referred to \cite{canetti2001universally}.
+
+% CRS % XXX: Citation
+In the common reference string (CRS) model \cite{canetti2001comm,canetti2002}, all parties in the system obtain from a trusted party a reference string, which is sampled according to a pre-specified distribution D. The reference string is referred to as the CRS.
+
+
+%NIZK
+Let $R$ be an efficiently computable binary relation. For pairs $(x, w) \in R$ we call $x$ the statement and $w$ the witness. A non-interactive proof system \cite{blum1988non} for a relation $R$ consists of a common reference string generation algorithm $K$, a prover $P$ and a verifier $V$. The generation algorithm produces a string $\sigma$ common to prover and verifier.
+The prover takes as input $(\sigma, x, w)$ and produces a proof $\pi$. The verifier takes as input $(\sigma, x, \pi)$ and outputs 1 if the proof is acceptable and 0 if rejecting the proof.
+
+% CCA
+Informally, an encryption scheme is secure against chosen-ciphertext attacks (CCA) if it is secure against an attacker can choose a ciphertext and obtain its decryption under an unknown key. In the attack, an adversary has a chance to enter one or more known ciphertexts into the system and obtain the resulting plaintexts.
+For more details on (public-key) CCA-secure schemes the reader can consult \cite{katz2014introduction}.
 
 
 \subsection{Functional Encryption}
