@@ -1,4 +1,5 @@
 \section{From Functional Encyption to $\iO$}
+\label{sec:iO-FE}
 
 In this section we will present a way to use Functional Encryption together with puncturable PRFs and symmetric key encryption in order to achieve $\iO$~\cite{iO-FE}. The idea behind this construction is \emph{first} to reduce the problem of constructing $\iO$ to constructing an obfuscation of only the encryption algorithm of a functional encryption scheme. Then, the obfuscation of a program $f$ will be just the secret key $sk_f$. Note that this would be trivial to achieve if we had a function-hiding public-key functional encryption. However, we only know how to construct function-hiding secret key functional encryption and this is the reason we need to obfuscate the encryption algorithm. The \emph{second} step is to create the $\iO$ of the encryption algorithm without using any $\iO$ but only functional encryption. The way to achieve this is by showing how $\FE$ together with $\iO$ of an encryption algorithm for $n$ bits, can lead to $\iO$ of an encryption algorithm for $n+1$ bits.
 
@@ -73,4 +74,3 @@ $\eval(i,E=(E_1,E_2),x\in\bit^n)$:
 \end{varwidth}}
 \end{figure}
 
-\label{sec:iO-FE}

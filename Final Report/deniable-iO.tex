@@ -1,4 +1,6 @@
 \section{From $\iO$ to (Deniable) Encryption}
+\label{sec:iO-deniable}
+
 In this section we show two important results appearing in~\cite{iO-deniable}. Using $\iO$, a PRG and a puncturable PRF we can create a public-key encryption scheme and a publicly deniable public-key encryption scheme.
 
 \subsection{Public-key Encryption}
@@ -60,4 +62,4 @@ The above scheme is a publicly deniable encryption scheme; i.e. it is IND-CPA se
 \begin{proof}[Proof Sketch]
 The IND-CPA security is based only on the pseudorandomness of $f^1$. For the indistinguishability of explanations, we define a sequence of games such that each of them is indistinguishable from the next. The idea behind these games is the following. In each game we puncture out a challenge value (the challenge message, the challenge ciphertext, the challenge randomness or the challenge explanation). If we guarantee that puncturing out this value does not change the functionality of our two programs then $\iO$ implies that the games are indistinguishable. But then, from the pseudorandomness of the punctured points (a property guaranteed by the punctured PRFs), we get that we can replace this challenge value with a random one. In the final step, both the challenge randomness and the explanation are two uniform strings and thus indistinguishable.
 \end{proof}
-\label{sec:iO-deniable}
+
