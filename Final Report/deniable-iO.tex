@@ -1,5 +1,5 @@
 \section{From $\iO$ to (Deniable) Encryption}
-In this section we show two important results appearing in [!!!!]; using $\iO$, a PRG and a puncturable PRF we can create a public-key encryption and a publicly deniable public-key encryption.
+In this section we show two important results appearing in~\cite{iO-deniable}. Using $\iO$, a PRG and a puncturable PRF we can create a public-key encryption scheme and a publicly deniable public-key encryption scheme.
 
 \subsection{Public-key Encryption}
 The idea of this construction comes from the ``XOR'' encryption scheme, whose encryption algorithm is $\enc_k(m,r)=(r,f_k(r)\oplus m)$ for a random $r$ and a PRF $f$. Now in order to make this a public-key scheme, we could consider that it is enough to obfuscate the algorithm $\enc$ and give it as the public key. However, it is easy to see, that in this case, when the adversary is given the ciphertext $(r,c)$ (which is an encryption of either $m_0$ or $m_1$), she can call the obfuscated program on input $(m_0,r)$ and check if it results on $(r,c)$. Now notice that we could avoid this attack by introducing a PRG $G:\bit^n\to\bit^{2n}$. Now the public key will be the obfuscation of the algorithm $\enc_k(m,r)=(G(r),f_k(G(r))\oplus m)$. Clearly, the previous attack does not work now since the adversary does not know the initial randomness.

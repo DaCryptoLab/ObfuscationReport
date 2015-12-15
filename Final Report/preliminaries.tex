@@ -1,5 +1,5 @@
 \section{Preliminaries}
-
+\label{sec:prel}
 Here we define all cryptographic primitives that we will use in this report. We will say that a function $f(\lambda)$ is negligible if $f(\lambda)\in o(1/p(\lambda))$ for any polynomial $p$. In this case we will abuse notation and write $f(\lambda)=\negl(\lambda)$.
 
 Two distributions $D_0,D_1$ over a universe $U\in\bit^n$ are called indistinguishable, denoted by $D_0\compind D_1$, if for any PPT algorithm $A$, it holds that
@@ -7,16 +7,33 @@ Two distributions $D_0,D_1$ over a universe $U\in\bit^n$ are called indistinguis
 \left|\Pr_{x\gets D_0}[A(x)=1]-\Pr_{x\gets D_1}[A(x)=1]\right|=\negl(n)
 \]
 
-Two oracles $O^0,O^1$ are called \emph{oracle indistinguishable}, denoted by $O^0\orind O^1$, if for any PPT algorithm $A$, it holds that
+Two algorithms $A,B$ are called \emph{oracle indistinguishable}, denoted by $A\orind B$, if for any PPT algorithm $D$, it holds that
 \[
-\left|\Pr\left[A^{O^0}=1]-\Pr[A^{O^1}=1\right]\right|=\negl(n)
+\left|\Pr\left[D^A=1]-\Pr[D^B=1\right]\right|=\negl(n)
 \]
+
+\subsection{VBB obfuscation}
+Virtual black box (VBB) obfuscation is the strongest kind of obfuscation we can hope for. Unfortunately, as we will show, it is impossible to achieve.
+
+\begin{mydef}[TM-obfuscator]
+	\label{def:VBB-tm}
+	A program $\Obf$ is an obfuscation if the following three conditions hold: % Complexity of O?
+	\begin{itemize}
+		\item (functionality) For every TM $M$, the string $\ObfM$ describes a machine computing the same function as $M$;
+		\item (polynomial slowdown)  For every TM $M$, the description length and the running time of $\ObfM$ are polynomially larger than that of $M$.
+		\item (VBB property) For every TM $M$ and PPT $A$ there exists a PPT $S$ s.t. 
+		$$ A(\ObfM) \indC S^M(1^{|M|}) $$
+		where $\indC$ denotes computational indistinguishability\footnote{Note that in the definition in \cite{VBB-imp} the machine $S$ has oracle access to a polynomially bounded version of $M$. For simplicity, in this report we will abuse notation and simply write $S^M$ referring to a poly-time bounded oracle access. }.
+	\end{itemize}
+\end{mydef}
+
+The definition above is the most general possible definition of TM-obfuscator: no adversary would be able to get effectively anything more from $\ObfM$ than what it could get from oracle access to $M$. We can increasingly weaken this definition by considering an adversary that, by accessing $\ObfM$, cannot effectively compute a witness $w$ s.t. $R(M,w)$ for any relation $R$, compute any function $f(M)$ or decide any predicate $\pi(M)$.
 
 \subsection{Indistinguishability Obfuscation}
 
 Intuitively an indistinguishability obfuscator $\iO$ is an algorithm that takes as input a circuit and outputs an obfuscated circuit that preserves the functionality of the original one. The security definition states that the indistinguishability obfuscations of two functionally equivalent programs are indistinguishable.
 
-\begin{mydef}
+\begin{mydef}[IO]
 A PPT algorithm $\iO$ is an indistinguishability obfuscator for a class of circuits $\cclass$ if it has the following properties:
 \begin{itemize}
 \item (functionality) For any $C\in\cclass$ and for any input $x$, it holds that
@@ -35,7 +52,7 @@ where the distributions are over the randomness of $\iO$.
 
 \subsection{Functional Encryption}
 A functional encryption scheme is an encryption scheme where each decryption key is associated to a function. Using this decryption key, we are not able to learn the original message but only the function of this message. In the construction of $\iO$ from $\FE$ we are only interested in a weaker version of $\FE$ where we have only one function $f$ for each public key. Moreover, it is enough assume selective security.
-\begin{mydef}
+\begin{mydef}[Functional Encryption]
 A single key, selectively secure public-key succinct functional encryption scheme $\FE$ for a function class $\fclass$ consists of three PPT algorithms: $\FESetup(f,1^\lambda)\to(pk,sk_f)$, $\FEEnc_{pk}(x)\to c$ and $\FEDec_{sk_f}(c) \to y$ and satisfies the following properties:
 \begin{itemize}
 \item (correctness) For any $f\in\fclass$, if $(pk,sk_f)\gets\FESetup(f,1^\lambda)$ then
@@ -55,13 +72,13 @@ A single key, selectively secure public-key succinct functional encryption schem
 
 In our constructions we need to make use of some pseudorandom tools, defined in this section. 
 
-\begin{mydef}
+\begin{mydef}[PRG]
 A deterministic function $G:\bit^n\to\bit^{2n}$ is called a length doubling pseudorandom generator if it is efficiently computable and $G(U_n)\compind U_{2n}$.
 \end{mydef}
 
 Another important tool which is used in almost any construction involving $\iO$ is that of \emph{puncturable PRFs}. Intuitively, a puncturable PRF $f$ has the property that we can \emph{puncture out} a point $x^*$ from its domain in such a way that $f$ maintains it functionality on all inputs $x\ne x^*$ but it is pseudorandom on $x^*$. It is worth to note that the actual puncturing takes place on the key. In other words, if we want to puncture out $x^*$, we will create a key $k\{x^*\}$ and now $f_{k\{x^*\}}$ will be the puncturable PRF (the definition of $f$ remains the same.)
 
-\begin{mydef}
+\begin{mydef}[Puncturable PRFs]
 A class of functions $\{f_k:\bit^n\to\bit^n\}_{k\in\bit^n}$ is called a puncturable PRF if it is efficiently computable and there exist PPT algorithms $\prfgen(1^n)\to k$ and $\prfpunc(x^*)\to k\{x^*\}$ such that
 \begin{itemize}
 \item (functionality preserving) For any $x\ne x^*$, if $k\gets\prfgen(1^n)$ and $k\{x^*\}\gets\prfpunc(x^*)$ it holds that
@@ -82,14 +99,17 @@ In the following we will also make use of a secret-key encryption scheme $(\senc
 \subsection{Deniable Encryption}
 Suppose that we have retrieved from a user her public key $pk$ and we have encrypted a message $m$ under $pk$ and retrieved a ciphertext $c$. Later on, someone may force us to reveal to him the original message by revealing the initial randomness we used. If we were able to find a randomness for any possible message then we would be able to avoid this situation. Informally, the scheme is deniable if given $c$ and any possible message $m'$ we are able to find an explanation randomness $e$, such that if we encrypt $m'$ with $e$ we get again the same ciphertext $c$. The scheme is publicly deniable if moreover, we can explain the ciphertext without need of the original randomness.
 
-\begin{mydef}
+\begin{mydef}[Deniable public-key encryption]
 A publicly deniable encryption scheme consists of the following algorithms $\DESetup(1^\lambda)\to(pk,sk)$, $\DEEnc_{pk}(m,u)\to c$ (where $u$ is the randomness), $\DEDec_{sk}(c)\to m$ and $\DEExp(pk,c,m,r)\to e$ (where $r$ is the randomness) and satisfies the following properties:
 \begin{itemize}
 \item (correctness) For any $m$, if $(pk,sk)\gets \DESetup(1^\lambda)$ then
 \[
 \DEDec_{sk}\left(\DEEnc_{pk}(m)\right)=m
 \]
-\item (IND-CPA) For $b\in\bit$ define oracles $C^b(m_0,m_1)=\DEEnc_{pk}(m_b,u)$. Then $$(pk,C^0)\orind(pk,C^1)$$.
+\item (IND-CPA) For $b\in\bit$ define oracles $C^b(m_0,m_1)=\DEEnc_{pk}(m_b,u)$. Then
+\[
+(pk,C^0)\orind(pk,C^1)
+\]
 \item (indistinguishability of explanations) Let $O^0(m)=\left(\DEEnc_{pk}(m,u),u\right)$ and $O^1(m)=\left(\DEEnc_{pk}(m,u),\DEExp\left(pk,\DEEnc_{pk}(m,u),m,r\right)\right)$. Then
 \[
 O^0\orind O^1
