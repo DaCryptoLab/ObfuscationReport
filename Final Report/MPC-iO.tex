@@ -37,7 +37,7 @@ We can augment each obfuscated program for round $j$ to use NIZKs that would pro
 
 % Summing up and having a closer look
 \subsection{A closer look at the protocol}
-Protocol $\Pi$ uses and indistinguishability Obfuscator $\iO$, a NIZK proof system (K, P,V), a CCA-secure PKE
+Protocol $\Pi$ uses and indistinguishability Obfuscator $\iO$, a NIZK proof system (K, P, V), a CCA-secure PKE
 $(\pkGen, \pkEnc, \pkDec)$
 scheme with perfect correctness and an n-party semi-honest MPC protocol $\pi$.
 
@@ -69,23 +69,19 @@ The following is an informal description of $\Prog_{i,j}$ for $i \in [n], j \in 
 The program takes as input $M_{j-1}$, the transcript up to round $j-1$; $\Phi_{j-1} = \{\phi_{i,j'} \}_{i \in [n], j' \leq j-1}$ the NIZK proofs up to round $j-1$ (details below); $\Gamma = \{ \gamma_{i,j} \}_{i \in [n],j \in [t]}$, the NIZK proofs for commitment, and $R = \{ r_{i,j} \}_{i \in [n],j \in [t]}$, the global randomness (where $\gamma_{i,j}$ and $r_{i,j}$ are defined as above).
 
 \[
-\Prog_{i,j}(\tau_{j-1}, \Phi_{j-1}, \Gamma, R) =
+\Prog_{i,j}(M_{j-1}, \Phi_{j-1}, \Gamma, R) =
 \begin{cases} 
 \hfill (m_{i,j}, \phi_{i,j})    \hfill & \text{ if all $\phi \in \Phi_{j-1}$ and $\gamma \in \Gamma$ are accepting proofs} \\
 \bot \hfill & \text{ otherwise } \\
 \end{cases}
 \]
 
-where $m_{i,j}$ is $P_i$'s message at round $j$ in the original protocol $\pi$ and $\phi_{i,j}$ is a NIZK proof that $m_{i,j}$ is consistent with $\tau_{j-1}$ and $R$.
+where $m_{i,j}$ is $P_i$'s message at round $j$ in the original protocol $\pi$ and $\phi_{i,j}$ is a NIZK proof that $m_{i,j}$ is consistent with $M_{j-1}$ and $R$.
 
 % Evaluation step
 \noindent
 \textbf{Evaluation (MPC in the Head):} For each $j \in [n]$ proceed by generating $\tau_{j-1}, \Phi_{j-1}, \Gamma \mbox{ and } R$ and evaluate $\iO_j$ of program $\Prog_{i,j}$ obtaining $m_{1,j},...,m_{n,j}$
 and $\phi_{1,j},...,\phi_{n,j}$. Finally each party $P_i$ outputs $m_{i,t}$.
 
-
-
-
-\subsubsection{Model and Tools: NIZK, CRS model, CCA-security}
 
 
