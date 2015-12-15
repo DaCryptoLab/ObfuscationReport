@@ -22,10 +22,10 @@ The construction uses the following assumptions:
 
 Informally, the scheme consists of the obfuscation of two programs. The first one, called $\enc$, is used to encrypt ciphertexts. In it implementation, it first checks if the input randomness $u$ is a special encoding of $m$ together with a ciphertext $c$. If this is the case, then it outputs $c$. Otherwise, it uses a regular public-key encryption scheme to encrypt $m$. The second algorithm, called $\explain$, basically creates and returns an encoding for $m,c$. Now our public key will just consist of the indistinguishability obfuscation of these two algorithms. We use the first one to encrypt and the second one to explain. More formally the definition of the programs and the construction appears below:
 
-\begin{figure}[h]
+\begin{figure}[!hbp]
 \centering
 \fbox{
-\begin{varwidth}{\textwidth}
+\begin{varwidth}{0.5\textwidth}
 $\enc(m,(u_1,u_2))$:
 \begin{enumerate}
 \item constants $pk,k_1,k_2,k_3$
@@ -34,12 +34,9 @@ $\enc(m,(u_1,u_2))$:
 \item Else $x\gets f^1_{k_1}(m,(u_1,u_2))$; return $\penc_{pk}(m,x)$
 \end{enumerate}
 \end{varwidth}}
-\end{figure}
-
-\begin{figure}[h]
-\centering
+\hfill
 \fbox{
-\begin{varwidth}{\textwidth}
+\begin{varwidth}{0.4\textwidth}
 $\explain(m,c,r)$:
 \begin{enumerate}
 \item constants $k_2,k_3$

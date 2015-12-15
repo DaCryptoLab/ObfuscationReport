@@ -2,8 +2,9 @@
 
 In this section we will present a way to use Functional Encryption together with puncturable PRFs and symmetric key encryption in order to achieve $\iO$~\cite{iO-FE}. The idea behind this construction is \emph{first} to reduce the problem of constructing $\iO$ to constructing an obfuscation of only the encryption algorithm of a functional encryption scheme. Then, the obfuscation of a program $f$ will be just the secret key $sk_f$. Note that this would be trivial to achieve if we had a function-hiding public-key functional encryption. However, we only know how to construct function-hiding secret key functional encryption and this is the reason we need to obfuscate the encryption algorithm. The \emph{second} step is to create the $\iO$ of the encryption algorithm without using any $\iO$ but only functional encryption. The way to achieve this is by showing how $\FE$ together with $\iO$ of an encryption algorithm for $n$ bits, can lead to $\iO$ of an encryption algorithm for $n+1$ bits.
 
-In more details, if we want to obfuscate the function $f$ we will create another function $f^*$ such that together with an encryption algorithm $\enc$ as defined below.
-\begin{figure}[h!]
+In more details, if we want to obfuscate the function $f$ we will create another function $f^*$ such that together with an encryption algorithm $\enc$ as defined in Figure \ref{fig:enc}.
+\begin{figure}[!h]
+	
 \centering
 \fbox{
 \begin{varwidth}{\textwidth}
@@ -14,8 +15,7 @@ $f^*(x,sk,b)$:
 \item Return $\dec_{sk}(\mathsf{CT_b})(x)$
 \end{enumerate}
 \end{varwidth}}
-\end{figure}
-\begin{figure}[h!]
+\hfill
 \centering
 \fbox{
 \begin{varwidth}{\textwidth}
@@ -25,6 +25,8 @@ $\enc^*(x)$:
 \item Return $\enc_{pk}(x,sk_0)$
 \end{enumerate}
 \end{varwidth}}
+\caption{}
+\label{fig:enc}
 \end{figure}
 
 Now, our obfuscated program will just consist of the functional key corresponding to $f^*$, together with the obfuscation of $\enc^*$; in other words, $\iO(f)=(sk_{f^*},\iO(\enc^*))$.
@@ -53,6 +55,7 @@ $\iO(i,C)$:
 \end{enumerate}
 \end{enumerate}
 \end{varwidth}}
+
 \end{figure}
 Intuitively, the $\iO$ algorithm obfuscates a program with $n$-size input using an obfuscation of a program with $n-1$-size input. Notice that the output of this algorithm will have the form $O=((\ldots(((v_0,v_1),sk_{f_1}),sk_{f_2}),\ldots,sk_{f_{n-1}}),sk_{f_n})$.
 
