@@ -1,2 +1,73 @@
 \section{From Functional Encyption to $\iO$}
+
+In this section we will present a way to use Functional Encryption together with puncturable PRFs and symmetric key encryption in order to achieve $\iO$~\cite{iO-FE}. The idea behind this construction is \emph{first} to reduce the problem of constructing $\iO$ to constructing an obfuscation of only the encryption algorithm of a functional encryption scheme. Then, the obfuscation of a program $f$ will be just the secret key $sk_f$. Note that this would be trivial to achieve if we had a function-hiding public-key functional encryption. However, we only know how to construct function-hiding secret key functional encryption and this is the reason we need to obfuscate the encryption algorithm. The \emph{second} step is to create the $\iO$ of the encryption algorithm without using any $\iO$ but only functional encryption. The way to achieve this is by showing how $\FE$ together with $\iO$ of an encryption algorithm for $n$ bits, can lead to $\iO$ of an encryption algorithm for $n+1$ bits.
+
+In more details, if we want to obfuscate the function $f$ we will create another function $f^*$ such that together with an encryption algorithm $\enc$ as defined below.
+\begin{figure}[h!]
+\centering
+\fbox{
+\begin{varwidth}{\textwidth}
+$f^*(x,sk,b)$:
+\begin{enumerate}
+\item constant $\mathsf{CT_0}(=\enc_{sk_0}(f))$
+\item constant $\mathsf{CT_1}(=\enc_{sk_1}(f))$
+\item Return $\dec_{sk}(\mathsf{CT_b})(x)$
+\end{enumerate}
+\end{varwidth}}
+\end{figure}
+\begin{figure}[h!]
+\centering
+\fbox{
+\begin{varwidth}{\textwidth}
+$\enc^*(x)$:
+\begin{enumerate}
+\item constant $pk,sk_0$
+\item Return $\enc_{pk}(x,sk_0)$
+\end{enumerate}
+\end{varwidth}}
+\end{figure}
+
+Now, our obfuscated program will just consist of the functional key corresponding to $f^*$, together with the obfuscation of $\enc^*$; in other words, $\iO(f)=(sk_{f^*},\iO(\enc^*))$.
+
+The second step now, is to deal with the obfuscation of the encryption algorithm $\enc^*$. We do this by creating a function $f^*_n$ such that $f^*_n(x)= (\enc^*_{n-1}(x0),\enc^*_{n-1}(x1))$. In other words, this function given an input it returns the encryption of its two possible extensions. Now it is enough to return $sk_{f^*_n}$ together with $\iO(\enc_{n-1})$. Continuing this recursion the obfuscation of $f$ will consist of $n$ functional keys  (one for each $f^*_{i}$) together with two trivial encryptions of $0$ and $1$. Now, if we want to evaluate $f$ on an input $x$, we first need to gradually construct $\enc^*_n(x)$ using the first $n-1$ functional keys and then decrypt using the functional key for $f^*_n$.
+
+\subsection{Formal construction}
+The formal construction of the $\iO$ will use recursion. We will assume that we are given a public key functional encryption scheme $\FE$, a single message secure encryption scheme $\enc,\dec$ as long as a puncturable PRF $\{f_k\}_k$.
+
+\begin{figure}[h!]
+\centering
+\fbox{
+\begin{varwidth}{\textwidth}
+$\iO(i,C)$:
+\begin{enumerate}
+\item If $i=1$, return $(C(0),C(1))$
+\item Else
+\begin{enumerate}
+\item Generate secret keys $sk_0,sk_1$ of the secret key encryption scheme
+\item Create $\mathsf{CT_0}\gets\enc_{sk_0}(C)$
+\item Create $\mathsf{CT_1}\gets\enc_{sk_1}(C)$
+\item Define $f(x,sk,b)=\dec_{sk}(\mathsf{CT_b})(x)$
+\item Generate $(pk,sk_f)\gets\FESetup(f)$
+\item Define $E(x)=\Big(\FEEnc_{pk}(x0,sk_0,0),\FEEnc_{pk}(x1,sk_0,0)\Big)$
+\item Return $(\iO(i-1,E),sk_f)$
+\end{enumerate}
+\end{enumerate}
+\end{varwidth}}
+\end{figure}
+Intuitively, the $\iO$ algorithm obfuscates a program with $n$-size input using an obfuscation of a program with $n-1$-size input. Notice that the output of this algorithm will have the form $O=((\ldots(((v_0,v_1),sk_{f_1}),sk_{f_2}),\ldots,sk_{f_{n-1}}),sk_{f_n})$.
+
+
+Now, the evaluation algorithm will take as input $O$ together with a value $x$ of $n$ bits and will recursively call itself until it computes the encryption of $x$. Finally it will decrypt using the functional key of the initial function $C$. For a pair $P=(a,b)$, define $P_1=a$ and $P_2=b$. Then the formal definition of the evaluation algorithm is the following:
+\begin{figure}[h!]
+\centering
+\fbox{
+\begin{varwidth}{\textwidth}
+$\eval(i,E=(E_1,E_2),x\in\bit^n)$:
+\begin{enumerate}
+\item If $i=1$, return $E_{x_1}$
+\item Else return $\FEDec_{E_2}\Big(\big(\eval(i-1,E_1,x_{[i-1]})\big)_{x_i}\Big)$
+\end{enumerate}
+\end{varwidth}}
+\end{figure}
+
 \label{sec:iO-FE}

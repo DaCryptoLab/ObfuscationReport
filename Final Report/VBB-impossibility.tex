@@ -11,10 +11,10 @@ To prove the impossibility of obfuscation in the strongest sense (as given in th
 We will give an intuition of the original proof by proving that 2-TM obfuscators do not exist. Adapting the proof for TM-obfuscators is straightforward.
 
 \begin{mydef}[(Predicate) 2-TM obfuscators ]
-	A 2-TM obfuscator is defined in the same way as a TM obfuscator, except that the "VBB property" is defined as follows:
+	A 2-TM obfuscator is defined in the same way as a TM obfuscator, except that the ``VBB property" is defined as follows:
 	\begin{itemize}
 		\item (VBB property) For every pair of TM $M_1, M_2$ and PPT $A$ there exists a PPT $S$ s.t. 
-		$$ |\Pr[A(\Obf(M_1), \Obf(M_2)) - \Pr[ S^{M_1,M_2}(1^{|M_1|+|M_2|})]| \leq \negl(min(|M_1|, |M_2|)) $$
+		$$ |\Pr[A(\Obf(M_1), \Obf(M_2)) - \Pr[ S^{M_1,M_2}(1^{|M_1|+|M_2|})]| \leq \negl(\min(|M_1|, |M_2|)) $$
 	\end{itemize}
 \end{mydef} 
 
@@ -22,7 +22,7 @@ We will give an intuition of the original proof by proving that 2-TM obfuscators
 The main idea behind the proof is that there is a difference between having oracle access to a function and getting a machine that can compute it. In the latter case we have a string on which we can do computations, possibly learning something from it.
 We will then consider a function that cannot be learned by oracle access. Consider the Turing Machine
  $\function{UltimateAnswer}_q$, $\UA_q$ for short, that returns the 
- answer to the ultimate question $q \in \bit^k$ on "life, the universe and everything" \cite{adams}.
+ answer to the ultimate question $q \in \bit^k$ on ``life, the universe and everything" \cite{adams}.
 \[
 \UA_q(x) =
 \begin{cases} 
@@ -63,12 +63,12 @@ In \cite{VBB-imp} the authors define \emph{circuit obfuscators}, the circuit cou
 % Approximate obfuscators
 As discussed so far we cannot hope for natural, strong definitions of obfuscation to exist. We will now present results in \cite{VBB-imp} on weaker variants of obfuscations and potential applications.
 
-One of the requirements we made in Definition \ref{def:VBB-tm} was that the obfuscated program should compute \emph{exactly} the same function as the original program. Could we obtain obfuscation if we relaxed our definition by allowing obfuscators to produce a program "approximately" the same as the original one?
+One of the requirements we made in Definition \ref{def:VBB-tm} was that the obfuscated program should compute \emph{exactly} the same function as the original program. Could we obtain obfuscation if we relaxed our definition by allowing obfuscators to produce a program ``approximately" the same as the original one?
 The answer is negative. We can define an $\epsilon$-approximate obfuscator as one that returns on all inputs give the correct answer with probability higher than $1-\epsilon$ \cite{VBB-imp}. As for circuit obfuscation, if one-way functions exist, then $\epsilon$-approximate obfuscators do not exist.
 
 % Applications: types of encryption...
-We could consider these negative results as the byproduct of small issues in our definition of VBB. In \cite{VBB-imp} the authors show this is not the case and that there is something inherently flawed in the idea of "Virtual Black Box". Maybe, despite these general impossibility results --- they suggest --- we can still obtain obfuscation for specific applications. Unfortunately this is not the case. They consider applications such as: signature schemes, private-key encryption, pseudorandom functions and message authentication codes. They prove that, if each of these primitives exists, then some instances of them must be "unobfuscatable".
-Finally they show that, conditional to Decisional Diffie Helman being "hard", there exist families of low-complexity functions (i.e. computable by $TC_0$ circuits) that are unobfuscatable.
+We could consider these negative results as the byproduct of small issues in our definition of VBB. In \cite{VBB-imp} the authors show this is not the case and that there is something inherently flawed in the idea of "Virtual Black Box". Maybe, despite these general impossibility results --- they suggest --- we can still obtain obfuscation for specific applications. Unfortunately this is not the case. They consider applications such as: signature schemes, private-key encryption, pseudorandom functions and message authentication codes. They prove that, if each of these primitives exists, then some instances of them must be ``unobfuscatable".
+Finally they show that, conditional to Decisional Diffie Helman being ``hard", there exist families of low-complexity functions (i.e. computable by $TC_0$ circuits) that are unobfuscatable.
 Later \cite{VBB-imp-aux} presented other impossibility results on VBB obfuscation proving its impossibility for adversaries with auxiliary inputs.
 
 % Watermarking
