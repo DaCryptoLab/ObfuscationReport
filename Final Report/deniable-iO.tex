@@ -1,6 +1,17 @@
-\section{From $\iO$ to Deniable Encryption of one bit}
+\section{From $\iO$ to (Deniable) Encryption}
+In this section we show two important results appearing in [!!!!]; using $\iO$, a PRG and a puncturable PRF we can create a public-key encryption and a publicly deniable public-key encryption.
 
+\subsection{Public-key Encryption}
+The idea of this construction comes from the ``XOR'' encryption scheme, whose encryption algorithm is $\enc_k(m,r)=(r,f_k(r)\oplus m)$ for a random $r$ and a PRF $f$. Now in order to make this a public-key scheme, we could consider that it is enough to obfuscate the algorithm $\enc$ and give it as the public key. However, it is easy to see, that in this case, when the adversary is given the ciphertext $(r,c)$ (which is an encryption of either $m_0$ or $m_1$), she can call the obfuscated program on input $(m_0,r)$ and check if it results on $(r,c)$. Now notice that we could avoid this attack by introducing a PRG $G:\bit^n\to\bit^{2n}$. Now the public key will be the obfuscation of the algorithm $\enc_k(m,r)=(G(r),f_k(G(r))\oplus m)$. Clearly, the previous attack does not work now since the adversary does not know the initial randomness.
 
+\begin{mytheorem}
+If $G$ is a length doubling PRG, and if $f$ is a puncturable PRF then the scheme is IND-CPA secure.
+\end{mytheorem}
+\begin{proof}[Proof sketch]
+Let $G_0$ be the original game. Then, in game $G_1$, we can invoke the pseudorandomness of the PRG in order to create the ciphertext in such a way that we do not pick the randomness $r^*$ as the output of $G$ but as a uniform value in $\bit^{2n}$. Now notice that $r^*$ does not belong to the image of $G$ except with negligible probability and thus we can puncture out $r^*$ from the PRF when we use it to construct the obfuscation of $\enc$ (game $G_2$). Therefore, with all by exponentially small probability the two obfuscations are functionally equivalent and, thus, by the $\iO$ property, $G_1\compind G_2$. Last, by the pseudorandomness on the punctured point $f_k(r^*)$ can be replaced with a random value and thus independent of the messages $m_0,m_1$. 
+\end{proof}
+
+\subsection{Deniable Encryption}
 The construction uses the following assumptions:
 \begin{itemize}
 \item A public key encryption scheme $(\pgen,\penc,\pdec)$. Here, the randomness of the encryption algorithm is made explicit; i.e. $\penc_{pk}(m,r)\to c$.
@@ -9,7 +20,7 @@ The construction uses the following assumptions:
 \item An indistinguishability obfuscator $\iO$
 \end{itemize}
 
-First, we define the following two algorithms. These algorithms define how we encrypt a message and how we explain a ciphertext. Now our public key will just consist of the indistinguishability obfuscation of these two algorithms. We use the first one to encrypt and the second one to explain.
+Informally, the scheme consists of the obfuscation of two programs. The first one, called $\enc$, is used to encrypt ciphertexts. In it implementation, it first checks if the input randomness $u$ is a special encoding of $m$ together with a ciphertext $c$. If this is the case, then it outputs $c$. Otherwise, it uses a regular public-key encryption scheme to encrypt $m$. The second algorithm, called $\explain$, basically creates and returns an encoding for $m,c$. Now our public key will just consist of the indistinguishability obfuscation of these two algorithms. We use the first one to encrypt and the second one to explain. More formally the definition of the programs and the construction appears below:
 
 \begin{figure}[h]
 \centering
