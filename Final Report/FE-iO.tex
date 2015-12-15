@@ -54,7 +54,7 @@ $\iO(i,C)$:
 \end{enumerate}
 \end{varwidth}}
 \end{figure}
-Intuitively, the $\iO$ algorithm obfuscates a program with $n$-size input using an obfuscation of a program with $n-1$-size input. Notice that the output of this algorithm will have the form $O=((\ldots(((v_0,v_1),f_1),f_2),\ldots),f_n)$.
+Intuitively, the $\iO$ algorithm obfuscates a program with $n$-size input using an obfuscation of a program with $n-1$-size input. Notice that the output of this algorithm will have the form $O=((\ldots(((v_0,v_1),sk_{f_1}),sk_{f_2}),\ldots,sk_{f_{n-1}}),sk_{f_n})$.
 
 
 Now, the evaluation algorithm will take as input $O$ together with a value $x$ of $n$ bits and will recursively call itself until it computes the encryption of $x$. Finally it will decrypt using the functional key of the initial function $C$. For a pair $P=(a,b)$, define $P_1=a$ and $P_2=b$. Then the formal definition of the evaluation algorithm is the following:
@@ -65,7 +65,7 @@ Now, the evaluation algorithm will take as input $O$ together with a value $x$ o
 $\eval(i,E=(E_1,E_2),x\in\bit^n)$:
 \begin{enumerate}
 \item If $i=1$, return $E_{x_1}$
-\item Else return $\FEDec_{E_2}\left(\eval(i-1,E_1,x_{[i-1]})_{x_i}\right)$
+\item Else return $\FEDec_{E_2}\Big(\big(\eval(i-1,E_1,x_{[i-1]})\big)_{x_i}\Big)$
 \end{enumerate}
 \end{varwidth}}
 \end{figure}

@@ -79,7 +79,7 @@ A deterministic function $G:\bit^n\to\bit^{2n}$ is called a length doubling pseu
 Another important tool which is used in almost any construction involving $\iO$ is that of \emph{puncturable PRFs}. Intuitively, a puncturable PRF $f$ has the property that we can \emph{puncture out} a point $x^*$ from its domain in such a way that $f$ maintains it functionality on all inputs $x\ne x^*$ but it is pseudorandom on $x^*$. It is worth to note that the actual puncturing takes place on the key. In other words, if we want to puncture out $x^*$, we will create a key $k\{x^*\}$ and now $f_{k\{x^*\}}$ will be the puncturable PRF (the definition of $f$ remains the same.)
 
 \begin{mydef}[Puncturable PRFs]
-A class of functions $\{f_k:\bit^n\to\bit^n\}_{k\in\bit^n}$ is called a puncturable PRF if it is efficiently computable and there exist PPT algorithms $\prfgen(1^n)\to k$ and $\prfpunc(x^*)\to k\{x^*\}$ such that
+A family of functions $\{f_k:\bit^n\to\bit^n\}_{k\in\bit^n}$ is called a puncturable PRF if it is efficiently computable and there exist PPT algorithms $\prfgen(1^n)\to k$ and $\prfpunc(x^*)\to k\{x^*\}$ such that
 \begin{itemize}
 \item (functionality preserving) For any $x\ne x^*$, if $k\gets\prfgen(1^n)$ and $k\{x^*\}\gets\prfpunc(x^*)$ it holds that
 \[
@@ -100,7 +100,7 @@ In the following we will also make use of a secret-key encryption scheme $(\senc
 Suppose that we have retrieved from a user her public key $pk$ and we have encrypted a message $m$ under $pk$ and retrieved a ciphertext $c$. Later on, someone may force us to reveal to him the original message by revealing the initial randomness we used. If we were able to find a randomness for any possible message then we would be able to avoid this situation. Informally, the scheme is deniable if given $c$ and any possible message $m'$ we are able to find an explanation randomness $e$, such that if we encrypt $m'$ with $e$ we get again the same ciphertext $c$. The scheme is publicly deniable if moreover, we can explain the ciphertext without need of the original randomness.
 
 \begin{mydef}[Deniable public-key encryption]
-A publicly deniable encryption scheme consists of the following algorithms $\DESetup(1^\lambda)\to(pk,sk)$, $\DEEnc_{pk}(m,u)\to c$ (where $u$ is the randomness), $\DEDec_{sk}(c)\to m$ and $\DEExp(pk,c,m,r)\to e$ (where $r$ is the randomness) and satisfies the following properties:
+A publicly deniable encryption scheme consists of the following three algorithms: $\DESetup(1^\lambda)\to(pk,sk)$, $\DEEnc_{pk}(m,u)\to c$ (where $u$ is the randomness), $\DEDec_{sk}(c)\to m$ and $\DEExp(pk,c,m,r)\to e$ (where $r$ is the randomness) and satisfies the following properties:
 \begin{itemize}
 \item (correctness) For any $m$, if $(pk,sk)\gets \DESetup(1^\lambda)$ then
 \[
